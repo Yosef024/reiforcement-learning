@@ -1,0 +1,39 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import math
+
+dataset=pd.read_csv('Ads_CTR_Optimisation.csv')
+
+n=dataset.sum()
+print(n)
+r,c=dataset.shape
+print(r)
+adssel=[]
+numsel=[0]*c
+rew=[0]*c
+tot=0
+for i in range(0,r):
+    ad=0
+    max=0
+    for j in range(0,c):
+        if numsel[j]>0:
+            avgrew=rew[j]/numsel[j]
+            deli=math.sqrt(3/2*math.log(i+1)/numsel[j])
+            upper=avgrew+deli
+        else:
+            upper=1000000000000000
+        if(upper>max):
+            max=upper
+            ad=j
+    adssel.append(ad)
+    numsel[ad]+=1
+    rew[ad]+=dataset.values[i,ad]
+    tot=dataset.values[i,ad]
+
+plt.hist(adssel)
+plt.title('adssel')
+plt.xlabel('ads')
+plt.ylabel('times ad selected')
+plt.show()
+
